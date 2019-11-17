@@ -39,6 +39,11 @@ async def loadScript(sid, script_name):
 	#todo: reload our script using imp
 	pass
 
+@sio.on('stopScript', namespace="/")
+async def stopScript(sid, script_name):
+	#stop script with given name
+	pass
+
 @sio.on('stopServer', namespace="/")
 def exit(sid, data):
 	print("server exit due to remote request")
