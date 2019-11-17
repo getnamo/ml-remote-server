@@ -2,6 +2,10 @@ from aiohttp import web
 import socketio
 import sys
 
+import mlpluginapi
+import imp
+#import importlib
+
 # create a Socket.IO server
 sio = socketio.AsyncServer()
 
@@ -28,7 +32,19 @@ async def disconnect(sid):
 
 #main methods
 @sio.on('sendInput', namespace="/")
-async def test(sid, data):
+async def sendInput(sid, data):
+
+	#branch targeting for expected functions
+	if data.targetFunction == 'onJsonInput':
+		pass
+	elif data.targetFunction == 'onFloatArrayInput':
+		pass
+
+	#it's a custom function
+	else:
+		pass
+
+
 	print("message << ", data)
 	return data
 
