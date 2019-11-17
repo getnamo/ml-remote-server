@@ -32,8 +32,10 @@ async def test(sid, data):
 	print("message << ", data)
 	return data
 
-@sio.on('reloadScript', namespace="/")
-async def reloadScript(sid, data):
+@sio.on('loadScript', namespace="/")
+async def loadScript(sid, script_name):
+	#if script_name == same, reload the script (stop, wait for finish, reimport)
+
 	#todo: reload our script using imp
 	pass
 
