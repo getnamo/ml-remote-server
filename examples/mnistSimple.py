@@ -6,11 +6,11 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 import unreal_engine as ue
-from TFPluginAPI import TFPluginAPI
+from MLPluginAPI import MLPluginAPI
 
 import operator
 
-class MnistSimple(TFPluginAPI):
+class MnistSimple(MLPluginAPI):
 	
 	#expected api: storedModel and session, json inputs
 	def onJsonInput(self, jsonInput):

@@ -1,8 +1,8 @@
 import tensorflow as tf
 import unreal_engine as ue
-from TFPluginAPI import TFPluginAPI
+from MLPluginAPI import MLPluginAPI
 
-class ExampleAPI(TFPluginAPI):
+class ExampleAPI(MLPluginAPI):
 
 	#optional api: setup your model for training
 	def onSetup(self):
