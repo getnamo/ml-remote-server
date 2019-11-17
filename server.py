@@ -48,8 +48,8 @@ async def sendInput(sid, data):
 	print("message << ", data)
 	return data
 
-@sio.on('loadScript', namespace="/")
-async def loadScript(sid, script_name):
+@sio.on('startScript', namespace="/")
+async def startScript(sid, script_name):
 	#if script_name == same, reload the script (stop, wait for finish, reimport)
 
 	#todo: reload our script using imp
