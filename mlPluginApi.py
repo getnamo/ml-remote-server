@@ -1,7 +1,7 @@
 #MLPluginAPI
 
 #debug
-print('imported!')
+print('MLPluginAPI imported')
 
 class MLPluginAPI():
 
@@ -16,6 +16,7 @@ class MLPluginAPI():
 		#class scoped variable for stopping
 		self.should_stop = False		#check this variable to stop training early
 		self.should_retrain = False		#use this variable to force your training
+		self.should_train_on_start = True
 		self.stored = {}
 
 	#internal don't need to override this

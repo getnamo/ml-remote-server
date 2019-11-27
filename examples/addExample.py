@@ -1,6 +1,5 @@
 import tensorflow as tf
-import unreal_engine as ue
-from MLPluginAPI import MLPluginAPI
+from mlpluginapi import MLPluginAPI
 
 class ExampleAPI(MLPluginAPI):
 
