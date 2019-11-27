@@ -4,10 +4,10 @@ import sys
 
 #active machine learning script handler
 import mlplugin as mlp
+import unreal_engine as ue
 
 # create a Socket.IO server
 sio = socketio.AsyncServer()
-
 
 #serve a web client for command-like api (debug)
 async def index(request):
@@ -18,6 +18,8 @@ async def index(request):
 app = web.Application()
 app.add_routes([web.get('/', index)])
 sio.attach(app)
+
+ue.set_sio_link(sio)
 
 
 #connect/disconnect etc
@@ -54,8 +56,8 @@ async def start_script(sid, script_name):
 	valid, err = mlp.load(script_name)
 	if (err):
 		print(err)
-	valid, err = mlp.start()
 	print('loaded.')
+	valid, err = mlp.begin_play()
 	if (err):
 		print(err)
 	print('started.')

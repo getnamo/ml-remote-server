@@ -6,14 +6,14 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 import unreal_engine as ue
-from MLPluginAPI import MLPluginAPI
+from mlpluginapi import MLPluginAPI
 
 import operator
 
 class MnistSimple(MLPluginAPI):
 	
 	#expected api: storedModel and session, json inputs
-	def onJsonInput(self, jsonInput):
+	def on_json_input(self, jsonInput):
 		#expect an image struct in json format
 		pixelarray = jsonInput['pixels']
 		ue.log('image len: ' + str(len(pixelarray)))
@@ -34,7 +34,7 @@ class MnistSimple(MLPluginAPI):
 		return jsonInput
 
 	#expected api: no params forwarded for training? TBC
-	def onBeginTraining(self):
+	def on_begin_training(self):
 
 		ue.log("starting mnist simple training")
 
@@ -74,7 +74,7 @@ class MnistSimple(MLPluginAPI):
 			self.sess.run(train_step, feed_dict={x: batch_xs, y_: batch_ys})
 			if i % 100 == 0:
 				ue.log(i)
-				if(self.shouldStop):
+				if(self.should_stop):
 					ue.log('early break')
 					break 
 
@@ -95,6 +95,6 @@ class MnistSimple(MLPluginAPI):
 		return self.stored
 
 #required function to get our api
-def getApi():
-	#return CLASSNAME.getInstance()
-	return MnistSimple.getInstance()
+def get_api():
+	#return CLASSNAME.get_instance()
+	return MnistSimple.get_instance()

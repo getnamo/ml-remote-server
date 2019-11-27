@@ -1,5 +1,6 @@
 import importlib
 from mlpluginapi import MLPluginAPI
+from threading import Timer
 
 #Script data
 active_script = None
@@ -8,7 +9,12 @@ mlobject = None
 script_folder = 'examples'
 
 #begins setup and training if marked as should_train_on_start
-def start():
+def begin_play_events():
+	if(mlobject.should_train_on_start):
+		mlobject.on_begin_training()
+
+
+def begin_play():
 	if(mlobject == None):
 		error_msg = 'mlplugin Error: No valid active script, run load first'
 		print(error_msg)
@@ -17,13 +23,18 @@ def start():
 		try:
 			#call startup sequence
 			mlobject.on_setup()
-			if(mlobject.should_train_on_start):
-				mlobject.on_begin_training()
+
+			#post tick start events (runs 10 ms later)
+			Timer(0.01, begin_play_events).start()		
 
 			return True, None
 		except BaseException as e:
 			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + e
 			return None, error_msg
+
+
+def start_training():
+	mlobject.on_begin_training()
 
 #stop script (training for now)
 def stop_training():
