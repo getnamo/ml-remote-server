@@ -4,7 +4,7 @@ from mlpluginapi import MLPluginAPI
 class ExampleAPI(MLPluginAPI):
 
 	#expected optional api: setup your model for training
-	def onSetup(self):
+	def on_setup(self):
 		self.sess = tf.InteractiveSession()
 		#self.graph = tf.get_default_graph()
 
@@ -13,10 +13,12 @@ class ExampleAPI(MLPluginAPI):
 
 		#operation
 		self.c = self.a + self.b
+
+		print('setup complete')
 		pass
 		
 	#expected optional api: parse input object and return a result object, which will be converted to json for UE4
-	def onJsonInput(self, jsonInput):
+	def on_json_input(self, jsonInput):
 		
 		print(jsonInput)
 
@@ -27,20 +29,21 @@ class ExampleAPI(MLPluginAPI):
 		return {'c':rawResult.tolist()}
 
 	#custom function to change the op
-	def changeOperation(self, type):
+	def change_operation(self, type):
 		if(type == '+'):
 			self.c = self.a + self.b
 
 		elif(type == '-'):
 			self.c = self.a - self.b
+		print('operation changed to ' + type)
 
 
 	#expected optional api: start training your network
-	def onBeginTraining(self):
+	def on_begin_training(self):
 		pass
     
 #NOTE: this is a module function, not a class function. Change your CLASSNAME to reflect your class
 #required function to get our api
-def getApi():
-	#return CLASSNAME.getInstance()
-	return ExampleAPI.getInstance()
+def get_api():
+	#return CLASSNAME.get_instance()
+	return ExampleAPI.get_instance()

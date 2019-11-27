@@ -93,5 +93,5 @@ class MLPluginAPI():
 
 #required function to get our api
 def get_api():
-	#return CLASSNAME.getInstance()
+	#return CLASSNAME.get_instance()
 	return MLPluginAPI.get_instance()

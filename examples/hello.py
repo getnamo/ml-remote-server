@@ -24,5 +24,5 @@ class ExampleAPI(MLPluginAPI):
 #NOTE: this is a module function, not a class function. Change your CLASSNAME to reflect your class
 #required function to get our api
 def get_api():
-	#return CLASSNAME.getInstance()
+	#return CLASSNAME.get_instance()
 	return ExampleAPI.get_instance()

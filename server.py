@@ -38,25 +38,38 @@ async def send_input(sid, data):
 
 	#branch targeting for expected functions
 	if data['targetFunction'] == 'onJsonInput':
-		return mlp.json_input(data['data'])
+		return mlp.json_input(data['input'])
 		
 	elif data['targetFunction'] == 'onFloatArrayInput':
-		return mlp.float_input(data['data'])
+		return mlp.float_input(data['input'])
 
 	#it's a custom function
 	else:
-		return mlp.custom_function(data)
+		return mlp.custom_function(data['targetFunction'], data['input'])
 
 @sio.on('startScript', namespace="/")
 async def start_script(sid, script_name):
+	print('loading <' + script_name + '>')
 	#if script_name == same, reload the script (stop, wait for finish, reimport)
-	mlp.load(script_name)
-	mlp.start()
-	pass
+	valid, err = mlp.load(script_name)
+	if (err):
+		print(err)
+	valid, err = mlp.start()
+	print('loaded.')
+	if (err):
+		print(err)
+	print('started.')
 
 @sio.on('stopScript', namespace="/")
 async def stop_script(sid, script_name):
-	#stop script with given name
+	#stop script with given name (name currently ignored)
+	mlp.stop_training()
+	pass
+
+#stop training if currently being trained.
+@sio.on('stopTraining', namespace="/")
+async def stop_training(sid, script_name):
+	mlp.stop_training()
 	pass
 
 @sio.on('stopServer', namespace="/")
@@ -75,12 +88,27 @@ async def chat(sid, data):
 		exit(sid, None)
 
 	if data[0:2] == '/r':
-		script_name = 'hello'
+		script_name = data[3:]
+
+		if(script_name == ''):
+			script_name = 'hello'
+
 		await start_script(sid, script_name)
 		await sio.emit('chatMessage', 'started script' + script_name)
 
 	if data[0:2] == '/i':
-		await send_input(sid, {'targetFunction':'onJsonInput','data':{'hi':'there'}})
+		result = await send_input(sid, {'targetFunction':'onJsonInput','input':{'a':1,'b':2}})
+		print(result)
+
+	if data[0:2] == '/f':
+		command_array = data[3:].split()
+		function_name = command_array[0]
+		param = {}
+
+		if(len(command_array)>1):
+			param = command_array[1]
+
+		await send_input(sid, {'targetFunction':function_name,'input':param})
 
 	print('chatMessage:' + content)
 	await sio.emit('chatMessage', content)
@@ -92,7 +120,9 @@ async def test(sid, data):
 	return {'echo':data}
 
 if __name__ == '__main__':
-	web.run_app(app)
+	try:
+		web.run_app(app)
+	except KeyboardInterrupt:
+		pass
+	
 	print('Exit.')
-
-

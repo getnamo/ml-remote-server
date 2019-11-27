@@ -19,9 +19,17 @@ def start():
 			mlobject.on_setup()
 			if(mlobject.should_train_on_start):
 				mlobject.on_begin_training()
-		except:
-			error_msg = 'mlplugin Error: Incorrect api for' + active_script_name
+
+			return True, None
+		except BaseException as e:
+			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + e
 			return None, error_msg
+
+#stop script (training for now)
+def stop_training():
+	if(mlobject != None):
+		#NB: this stops training, but atm won't do anything else
+		mlobject._stop_training() 
 
 
 #load script into memory. Ready to call start().
@@ -29,6 +37,12 @@ def load(script_name):
 	global active_script
 	global active_script_name
 	global mlobject
+
+	if(active_script_name != script_name):
+		del active_script
+		active_script = None
+		mlobject = None
+		active_script_name = None
 
 	status_msg = 'unknown'
 	active_script_name = script_name
@@ -55,14 +69,16 @@ def load(script_name):
 #run inputs on our class
 def json_input(input):
 	if(mlobject != None):
-		mlobject.on_json_input(input)
+		return mlobject.on_json_input(input)
 
 def float_input(input):
 	if(mlobject != None):
-		mlobject.on_float_array_input(input)
+		return mlobject.on_float_array_input(input)
 
 def custom_function(name, param):
 	if(mlobject != None):
 		method_to_call = getattr(mlobject, name)
 		if(method_to_call):
-			method_to_call(param)
+			return method_to_call(param)
+		else:
+			return None
