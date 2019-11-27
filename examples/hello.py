@@ -1,6 +1,7 @@
 print('hello import')
 
 from mlpluginapi import MLPluginAPI
+import unreal_engine as ue
 
 #MLPluginAPI
 class ExampleAPI(MLPluginAPI):
@@ -8,6 +9,7 @@ class ExampleAPI(MLPluginAPI):
 	#optional api: setup your model for training
 	def on_setup(self):
 		print('hello on_setup')
+		ue.log('hi')
 		pass
 		
 	#optional api: parse input object and return a result object, which will be converted to json for UE4

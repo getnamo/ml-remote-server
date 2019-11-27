@@ -7,7 +7,7 @@ import mlplugin as mlp
 import unreal_engine as ue
 
 # create a Socket.IO server
-sio = socketio.AsyncServer()
+sio = socketio.AsyncServer() #async_handlers=True
 
 #serve a web client for command-like api (debug)
 async def index(request):
@@ -19,7 +19,7 @@ app = web.Application()
 app.add_routes([web.get('/', index)])
 sio.attach(app)
 
-ue.set_sio_link(sio)
+ue.set_sio_link(sio,app)
 
 
 #connect/disconnect etc
@@ -61,6 +61,8 @@ async def start_script(sid, script_name):
 	if (err):
 		print(err)
 	print('started.')
+
+	await mlp.begin_play_events()
 
 @sio.on('stopScript', namespace="/")
 async def stop_script(sid, script_name):

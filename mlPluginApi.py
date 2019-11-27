@@ -1,5 +1,7 @@
 #MLPluginAPI
 
+import shared_globals as g
+
 #debug
 print('MLPluginAPI imported')
 
@@ -33,7 +35,7 @@ class MLPluginAPI():
 	
 	#call this inside your class to emit a custom event on gt, don't override the function
 	def call_event(self, event, data = None, useJson = False):
-		self.tf_component.custom_event(event, data, useJson)
+		g.custom_event(event, data, useJson)
 
 	#expected api: setup your model for training
 	def on_setup(self):

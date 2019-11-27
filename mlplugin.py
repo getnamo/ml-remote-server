@@ -9,7 +9,7 @@ mlobject = None
 script_folder = 'examples'
 
 #begins setup and training if marked as should_train_on_start
-def begin_play_events():
+async def begin_play_events():
 	if(mlobject.should_train_on_start):
 		mlobject.on_begin_training()
 
@@ -25,7 +25,10 @@ def begin_play():
 			mlobject.on_setup()
 
 			#post tick start events (runs 10 ms later)
-			Timer(0.01, begin_play_events).start()		
+			#Timer(0.01, begin_play_events).start()		
+
+			#sync variant
+			#begin_play_events()
 
 			return True, None
 		except BaseException as e:
