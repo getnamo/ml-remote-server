@@ -1,6 +1,8 @@
 import importlib
 from mlpluginapi import MLPluginAPI
 from threading import Timer
+import traceback
+import unreal_engine as ue
 
 #Script data
 active_script = None
@@ -83,16 +85,33 @@ def load(script_name):
 #run inputs on our class
 def json_input(input):
 	if(mlobject != None):
-		return mlobject.on_json_input(input)
+		try:
+			return mlobject.on_json_input(input)
+		except BaseException as e:
+			error_stack = traceback.format_exc()
+			ue.log(error_stack)
+			return e
 
 def float_input(input):
 	if(mlobject != None):
-		return mlobject.on_float_array_input(input)
+		try:
+			return mlobject.on_float_array_input(input)
+		except BaseException as e:
+			error_stack = traceback.format_exc()
+			ue.log(error_stack)
+			return e
+		
 
 def custom_function(name, param):
 	if(mlobject != None):
-		method_to_call = getattr(mlobject, name)
-		if(method_to_call):
-			return method_to_call(param)
-		else:
-			return None
+		try:
+			method_to_call = getattr(mlobject, name)
+			if(method_to_call):
+				return method_to_call(param)
+			else:
+				return None
+		except BaseException as e:
+			error_stack = traceback.format_exc()
+			ue.log(error_stack)
+			return e
+		
