@@ -50,6 +50,7 @@ async def begin_play_events():
 	if(mlobject.should_train_on_start):
 		start_training()
 
+#Typically called shortly after loading script 
 def begin_play():
 	if(mlobject == None):
 		error_msg = 'mlplugin Error: No valid active script, run load first'
@@ -69,6 +70,8 @@ def begin_play():
 			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + str(error_stack)
 			return None, error_msg
 
+
+#wrap a function call with checks and local options
 def call_with_checks(function, input_params=None):
 	#capture any errors
 	try:
@@ -86,14 +89,13 @@ def call_with_checks(function, input_params=None):
 			error_stack = traceback.format_exc()
 			ue.log(error_s)
 
+
 def start_training():
 	call_with_checks(mlobject.on_begin_training)
 
-
-#stop script (training for now)
 def stop_training():
 	if(mlobject != None):
-		#NB: this stops training, but atm won't do anything else
+		#flip the internal state
 		mlobject._stop_training()
 
 #run inputs on our class

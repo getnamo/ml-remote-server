@@ -17,9 +17,9 @@ def log(text):
 def get_content_dir():
 	return './unreal/content/'
 
-def _custom_event(event, data, useJson):
+def custom_event(event, data, use_json):
 	if(g.sio != None):
-		run_on_sio(g.sio.emit('customEvent', {'event':event, 'data':data}))
+		run_on_sio(g.sio.emit('customEvent', {'event':event, 'data':data, 'useJson': use_json}))
 
 def set_sio_link(link_sio, link_app):
 	print('link set')
@@ -27,7 +27,7 @@ def set_sio_link(link_sio, link_app):
 	g.app = link_app
 	g.custom_event = _custom_event
 
-	#store socket.io loop
+	#store socket.io loop for callback scheduling, we can get it from calling thread
 	g.sio_loop = asyncio.get_event_loop()
 
 # wrap around callbacks

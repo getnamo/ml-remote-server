@@ -19,6 +19,7 @@ app = web.Application()
 app.add_routes([web.get('/', index)])
 sio.attach(app)
 
+#linkup references for script callbacks via ue.log and ue.custom_event
 ue.set_sio_link(sio, app)
 
 
