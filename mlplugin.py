@@ -12,11 +12,43 @@ mlobject = None
 script_folder = 'scripts'
 USE_MULTITHREADING = True
 
+#load script into memory. Ready to call begin_play/setup().
+def load(script_name):
+	global active_script
+	global active_script_name
+	global mlobject
+
+	if(active_script_name != script_name):
+		del active_script
+		active_script = None
+		mlobject = None
+		active_script_name = None
+
+	status_msg = 'unknown'
+	active_script_name = script_name
+
+	if(active_script != None):
+		importlib.reload(active_script)
+	else:
+		active_script = importlib.import_module(script_folder + '.' + script_name)
+
+	#grab an instance and check api
+	try:
+		mlobject = active_script.get_api()
+		if issubclass(mlobject.__class__, MLPluginAPI):
+			status_msg = 'valid script loaded'
+			return status_msg, None #its valid reverse tuple
+		else:
+			status_msg = 'invalid script class, please subclass MLPluginAPI'
+			return None, status_msg
+	except BaseException as e:
+		status_msg = e
+		return None, status_msg
+
 #begins setup and training if marked as should_train_on_start
 async def begin_play_events():
 	if(mlobject.should_train_on_start):
 		start_training()
-
 
 def begin_play():
 	if(mlobject == None):
@@ -62,42 +94,7 @@ def start_training():
 def stop_training():
 	if(mlobject != None):
 		#NB: this stops training, but atm won't do anything else
-		mlobject._stop_training() 
-
-
-#load script into memory. Ready to call begin_play/setup().
-def load(script_name):
-	global active_script
-	global active_script_name
-	global mlobject
-
-	if(active_script_name != script_name):
-		del active_script
-		active_script = None
-		mlobject = None
-		active_script_name = None
-
-	status_msg = 'unknown'
-	active_script_name = script_name
-
-	if(active_script != None):
-		importlib.reload(active_script)
-	else:
-		active_script = importlib.import_module(script_folder + '.' + script_name)
-
-	#grab an instance and check api
-	try:
-		mlobject = active_script.get_api()
-		if issubclass(mlobject.__class__, MLPluginAPI):
-			status_msg = 'valid script loaded'
-			return status_msg, None #its valid reverse tuple
-		else:
-			status_msg = 'invalid script class, please subclass MLPluginAPI'
-			return None, status_msg
-	except BaseException as e:
-		status_msg = e
-		return None, status_msg
-
+		mlobject._stop_training()
 
 #run inputs on our class
 def json_input(input):
@@ -106,7 +103,6 @@ def json_input(input):
 def float_input(input):
 	call_with_checks(mlobject.on_float_array_input, input)
 		
-
 def custom_function(name, param):
 	if(mlobject != None):
 		#check for valid method first
