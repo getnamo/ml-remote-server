@@ -3,17 +3,19 @@ from mlpluginapi import MLPluginAPI
 from threading import Timer
 import traceback
 import unreal_engine as ue
+import upythread_server as ut
 
 #Script data
 active_script = None
 active_script_name = None
 mlobject = None
 script_folder = 'examples'
+USE_MULTITHREADING = True
 
 #begins setup and training if marked as should_train_on_start
 async def begin_play_events():
 	if(mlobject.should_train_on_start):
-		mlobject.on_begin_training()
+		start_training()
 
 
 def begin_play():
@@ -26,20 +28,21 @@ def begin_play():
 			#call startup sequence
 			mlobject.on_setup()
 
-			#post tick start events (runs 10 ms later)
-			#Timer(0.01, begin_play_events).start()		
-
-			#sync variant
-			#begin_play_events()
+			#schedule this event for next tick to unblock messaging
+			ue.run_on_sio(begin_play_events())
 
 			return True, None
 		except BaseException as e:
-			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + e
+			error_stack = traceback.format_exc()
+			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + str(error_stack)
 			return None, error_msg
 
 
 def start_training():
-	mlobject.on_begin_training()
+	if(USE_MULTITHREADING):
+		ut.run_on_bt(mlobject.on_begin_training)
+	else:
+		mlobject.on_begin_training()
 
 #stop script (training for now)
 def stop_training():
@@ -48,7 +51,7 @@ def stop_training():
 		mlobject._stop_training() 
 
 
-#load script into memory. Ready to call start().
+#load script into memory. Ready to call begin_play/setup().
 def load(script_name):
 	global active_script
 	global active_script_name
