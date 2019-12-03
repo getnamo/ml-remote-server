@@ -9,7 +9,7 @@ import upythread_server as ut
 active_script = None
 active_script_name = None
 mlobject = None
-script_folder = 'examples'
+script_folder = 'scripts'
 USE_MULTITHREADING = True
 
 #begins setup and training if marked as should_train_on_start
