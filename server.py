@@ -22,7 +22,6 @@ sio.attach(app)
 #linkup references for script callbacks via ue.log and ue.custom_event
 ue.set_sio_link(sio, app)
 
-
 #connect/disconnect etc
 @sio.on('connect', namespace="/")
 async def connect(sid, data):
@@ -36,15 +35,27 @@ async def disconnect(sid):
 
 #main methods
 @sio.on('sendInput', namespace="/")
-async def send_input(sid, data):
+async def send_input(sid, data, callback=None):
 	print('sendInput: ' + str(data))
+
+	#wrap around logs
+	def callback_lambda(params):
+			#print and emit logs
+			print('sendInput return: ' + str(params))
+			ue.log(params)
+
+			#forward to network callback
+			if(callback != None):
+				callback(params)
 
 	#branch targeting for expected functions
 	if data['targetFunction'] == 'onJsonInput':
-		return mlp.json_input(data['input'])
+		mlp.json_input(data['input'], callback_lambda)
+		return
 		
 	elif data['targetFunction'] == 'onFloatArrayInput':
-		return mlp.float_input(data['input'])
+		mlp.float_input(data['input'], callback_lambda)
+		return
 
 	#it's a custom function
 	else:

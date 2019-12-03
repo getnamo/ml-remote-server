@@ -72,23 +72,25 @@ def begin_play():
 
 
 #wrap a function call with checks and local options
-def call_with_checks(function, input_params=None):
+def call_with_checks(function, input_params=None, callback=None):
 	#capture any errors
 	try:
 		#ensure we call only when we have a valid mlobject (loaded script)
 		if(mlobject != None):
 			#swap between threaded operation
 			if(USE_MULTITHREADING):
-				ut.run_on_bt(function, input_params)
+				ut.run_on_bt(function, input_params, callback)
 			else:
 				if(input_params == None):
-					return function()
+					return function(None, callback)
 				else:
-					return function(input_params)
+					return function(input_params, callback)
 	except BaseException as e:
 			error_stack = traceback.format_exc()
 			ue.log(error_s)
 
+#def input_callback(input):
+	
 
 def start_training():
 	call_with_checks(mlobject.on_begin_training)
@@ -99,11 +101,11 @@ def stop_training():
 		mlobject._stop_training()
 
 #run inputs on our class
-def json_input(input):
-	call_with_checks(mlobject.on_json_input, input)
+def json_input(input_params, callback=None):
+	call_with_checks(mlobject.on_json_input, input_params, callback)
 
-def float_input(input):
-	call_with_checks(mlobject.on_float_array_input, input)
+def float_input(input_params, callback=None):
+	call_with_checks(mlobject.on_float_array_input, input_params, callback)
 		
 def custom_function(name, param):
 	if(mlobject != None):

@@ -24,7 +24,9 @@ class ExampleAPI(MLPluginAPI):
 
 		feed_dict = {self.a: jsonInput['a'], self.b: jsonInput['b']}
 
-		rawResult = self.sess.run(self.c,feed_dict)
+		rawResult = self.sess.run(self.c, feed_dict)
+
+		print('raw result: ' + str(rawResult))
 
 		return {'c':rawResult.tolist()}
 

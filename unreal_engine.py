@@ -31,6 +31,8 @@ def set_sio_link(link_sio, link_app):
 	g.sio_loop = asyncio.get_event_loop()
 
 # wrap around callbacks
-def run_on_gt(function, param):
-	log('run_on_gt not needed or enabled for server')
-	pass
+def run_on_gt(callback, param):
+	#called directly
+	print("run_on_gt callback: " + str(param))
+	if(callback != None):
+		callback(param)
