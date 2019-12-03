@@ -37,12 +37,26 @@ def begin_play():
 			error_msg = 'mlplugin Error: Incorrect api for ' + active_script_name + ': ' + str(error_stack)
 			return None, error_msg
 
+def call_with_checks(function, input_params=None):
+	#capture any errors
+	try:
+		#ensure we call only when we have a valid mlobject (loaded script)
+		if(mlobject != None):
+			#swap between threaded operation
+			if(USE_MULTITHREADING):
+				ut.run_on_bt(function, input_params)
+			else:
+				if(input_params == None):
+					return function()
+				else:
+					return function(input_params)
+	except BaseException as e:
+			error_stack = traceback.format_exc()
+			ue.log(error_s)
 
 def start_training():
-	if(USE_MULTITHREADING):
-		ut.run_on_bt(mlobject.on_begin_training)
-	else:
-		mlobject.on_begin_training()
+	call_with_checks(mlobject.on_begin_training)
+
 
 #stop script (training for now)
 def stop_training():
@@ -87,34 +101,18 @@ def load(script_name):
 
 #run inputs on our class
 def json_input(input):
-	if(mlobject != None):
-		try:
-			return mlobject.on_json_input(input)
-		except BaseException as e:
-			error_stack = traceback.format_exc()
-			ue.log(error_stack)
-			return e
+	call_with_checks(mlobject.on_json_input, input)
 
 def float_input(input):
-	if(mlobject != None):
-		try:
-			return mlobject.on_float_array_input(input)
-		except BaseException as e:
-			error_stack = traceback.format_exc()
-			ue.log(error_stack)
-			return e
+	call_with_checks(mlobject.on_float_array_input, input)
 		
 
 def custom_function(name, param):
 	if(mlobject != None):
-		try:
-			method_to_call = getattr(mlobject, name)
-			if(method_to_call):
-				return method_to_call(param)
-			else:
-				return None
-		except BaseException as e:
-			error_stack = traceback.format_exc()
-			ue.log(error_stack)
-			return e
+		#check for valid method first
+		method_to_call = getattr(mlobject, name)
+		if(method_to_call):
+			call_with_checks(method_to_call, param)
+		else:
+			return None, "No such function" + str(name)
 		
