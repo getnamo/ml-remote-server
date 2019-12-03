@@ -25,7 +25,7 @@ def set_sio_link(link_sio, link_app):
 	print('link set')
 	g.sio = link_sio
 	g.app = link_app
-	g.custom_event = _custom_event
+	g.custom_event = custom_event
 
 	#store socket.io loop for callback scheduling, we can get it from calling thread
 	g.sio_loop = asyncio.get_event_loop()
