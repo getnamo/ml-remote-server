@@ -15,6 +15,7 @@ def sio_future():
 def log(text):
 	print(text)
 	if(g.sio != None):
+		run_on_sio(g.sio.emit('log', str(text)))
 		run_on_sio(g.sio.emit('chatMessage', 'log:' + str(text)))
 
 def get_content_dir():
