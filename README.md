@@ -1,6 +1,6 @@
 # ml-remote-server
 Server complement of https://github.com/getnamo/machine-learning-remote-ue4.
-Startup the server, point your ```MachineLearningRemote``` component to your server address with you script file name set in ```DefaultScript``` property and it will load on begin play.
+Startup the server, point your ```MachineLearningRemote``` component to your server address with the script file name set in ```DefaultScript``` property and it will load on begin play.
 
 ## Quick Setup
 
