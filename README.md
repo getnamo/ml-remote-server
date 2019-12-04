@@ -13,7 +13,7 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 *Optional Steps*
 
 6. Connect your UE4 instance via https://github.com/getnamo/machine-learning-remote-ue4
-7. Listen to log events via your browser by going to ```<server ip>:8080``` or ```localhost:8080``` in your browser. There are some debug commands like ```/r <script name>``` to swap script and ```/i``` to send dummy inputs; see https://github.com/getnamo/ml-remote-server/blob/master/server.py#L117 for all supported commands.
+7. Listen to log events via your browser by going to ```<server ip>:8080``` or [```localhost:8080```](http://localhost:8080) in your browser. There are some debug commands like ```/r <script name>``` to swap script and ```/i``` to send dummy inputs; see https://github.com/getnamo/ml-remote-server/blob/master/server.py#L117 for all supported commands.
 
 ## How to use
 
