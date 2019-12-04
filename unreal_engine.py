@@ -8,6 +8,9 @@ import asyncio
 def run_on_sio(future):
 	asyncio.run_coroutine_threadsafe(future, g.sio_loop)
 
+def sio_future():
+	return g.sio_loop.create_future()
+
 #todo: fix events and emitting while in sync mode
 def log(text):
 	print(text)

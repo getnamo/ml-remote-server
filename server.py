@@ -5,6 +5,7 @@ import sys
 #active machine learning script handler
 import mlplugin as mlp
 import unreal_engine as ue
+import json
 
 # create a Socket.IO server
 sio = socketio.AsyncServer() #async_handlers=True
@@ -22,6 +23,9 @@ sio.attach(app)
 #linkup references for script callbacks via ue.log and ue.custom_event
 ue.set_sio_link(sio, app)
 
+inputFieldName = 'inputData'
+functionFieldName = 'targetFunction'
+
 #connect/disconnect etc
 @sio.on('connect', namespace="/")
 async def connect(sid, data):
@@ -35,31 +39,39 @@ async def disconnect(sid):
 
 #main methods
 @sio.on('sendInput', namespace="/")
-async def send_input(sid, data, callback=None):
+async def send_input(sid, data):
 	print('sendInput: ' + str(data))
 
-	#wrap around logs
-	def callback_lambda(params):
-			#print and emit logs
-			print('sendInput return: ' + str(params))
-			ue.log(params)
+	global inputFieldName
+	global functionFieldName
 
-			#forward to network callback
-			if(callback != None):
-				callback(params)
+	#handle callback and wrap around logs
+	future = ue.sio_future()
+	def callback_lambda(params):
+		#print and emit logs
+		print('sendInput return: ' + str(params))
+		ue.log(params)
+		future.set_result(params)
 
 	#branch targeting for expected functions
-	if data['targetFunction'] == 'onJsonInput':
-		mlp.json_input(data['input'], callback_lambda)
-		return
+	if data[functionFieldName] == 'onJsonInput':
+		#define a future so we can return the callback correctly
+
+		inputData = data[inputFieldName]
+		#json decode string if string passed (possible call not using sio object call)
+		if type(inputData) is str:
+			inputData = json.loads(inputData)
+
+		mlp.json_input(inputData, callback_lambda)
+		return await future
 		
-	elif data['targetFunction'] == 'onFloatArrayInput':
-		mlp.float_input(data['input'], callback_lambda)
-		return
+	elif data[functionFieldName] == 'onFloatArrayInput':
+		mlp.float_input(data[inputFieldName], callback_lambda)
+		return await future
 
 	#it's a custom function
 	else:
-		return mlp.custom_function(data['targetFunction'], data['input'])
+		return mlp.custom_function(data[functionFieldName], data[inputFieldName])
 
 @sio.on('startScript', namespace="/")
 async def start_script(sid, script_name):
@@ -73,6 +85,9 @@ async def start_script(sid, script_name):
 	if (err):
 		print(err)
 	print('started.')
+
+	await sio.emit('scriptStarted', script_name) #todo: capture script errors
+	await sio.emit('chatMessage', 'started script' + script_name)
 
 @sio.on('stopScript', namespace="/")
 async def stop_script(sid, script_name):
@@ -96,6 +111,9 @@ def exit(sid, data):
 async def chat(sid, data):
 	content = str(sid)[0:4] + ':' + data
 
+	global inputFieldName
+	global functionFieldName
+
 	#debug commands
 	if data[0:2] == '/s':
 		print('Stop issued remotely by' + sid)
@@ -108,10 +126,9 @@ async def chat(sid, data):
 			script_name = 'hello'
 
 		await start_script(sid, script_name)
-		await sio.emit('chatMessage', 'started script' + script_name)
 
 	if data[0:2] == '/i':
-		result = await send_input(sid, {'targetFunction':'onJsonInput','input':{'a':1,'b':2}})
+		result = await send_input(sid, {functionFieldName:'onJsonInput',inputFieldName:{'a':1,'b':2}})
 		print(result)
 
 	if data[0:2] == '/f':
@@ -122,7 +139,7 @@ async def chat(sid, data):
 		if(len(command_array)>1):
 			param = command_array[1]
 
-		await send_input(sid, {'targetFunction':function_name,'input':param})
+		await send_input(sid, {functionFieldName:function_name,inputFieldName:param})
 
 	print('chatMessage:' + content)
 	await sio.emit('chatMessage', content)
