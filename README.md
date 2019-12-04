@@ -27,4 +27,4 @@ Listen to the ```OnScriptStarted``` event to know it's safe to send inputs/start
 
 See https://github.com/getnamo/machine-learning-remote-ue4 as all interaction beyond debugging is handled by client.
 
-Keep in mind that you can stop play, do some code changes and restart playing without rebooting your server as the script will be reloaded (or use the debug browser with ```/r <script name>``` to live reload a script
+Keep in mind that you can stop play, do some code changes and restart playing without rebooting your server as the script will be reloaded (or use the debug browser with ```/r <script name>``` to live reload a script)
