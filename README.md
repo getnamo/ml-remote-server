@@ -4,7 +4,7 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 
 ## Quick Setup
 
-1. Install [python 3](https://www.python.org/downloads/) recommended version for e.g. tensorflow: 3.7
+1. Install [python 3](https://www.python.org/downloads/) recommended version for e.g. tensorflow: 3.7. Run ```pip install -r requirements.txt```
 2. Pick a folder, navigate to it
 3. ```git clone https://github.com/getnamo/ml-remote-server.git```
 4. If you're on windows double click ```StartupServer.bat``` otherwise in terminal type ```python server.py``` to start the server.
