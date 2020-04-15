@@ -1,4 +1,5 @@
 import tensorflow as tf
+import unreal_engine as ue #for remote logging only
 from mlpluginapi import MLPluginAPI
 
 class ExampleAPI(MLPluginAPI):
@@ -14,21 +15,21 @@ class ExampleAPI(MLPluginAPI):
 		#operation
 		self.c = self.a + self.b
 
-		print('setup complete')
+		ue.log('setup complete')
 		pass
 		
 	#expected optional api: parse input object and return a result object, which will be converted to json for UE4
-	def on_json_input(self, jsonInput):
+	def on_json_input(self, json_input):
 		
-		print(jsonInput)
+		ue.log(json_input)
 
-		feed_dict = {self.a: jsonInput['a'], self.b: jsonInput['b']}
+		feed_dict = {self.a: json_input['a'], self.b: json_input['b']}
 
-		rawResult = self.sess.run(self.c, feed_dict)
+		raw_result = self.sess.run(self.c, feed_dict)
 
-		print('raw result: ' + str(rawResult))
+		ue.log('raw result: ' + str(raw_result))
 
-		return {'c':rawResult.tolist()}
+		return {'c':raw_result.tolist()}
 
 	#custom function to change the op
 	def change_operation(self, type):
@@ -37,7 +38,7 @@ class ExampleAPI(MLPluginAPI):
 
 		elif(type == '-'):
 			self.c = self.a - self.b
-		print('operation changed to ' + type)
+		ue.log('operation changed to ' + type)
 
 
 	#expected optional api: start training your network

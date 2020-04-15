@@ -107,12 +107,12 @@ def json_input(input_params, callback=None):
 def float_input(input_params, callback=None):
 	call_with_checks(mlobject.on_float_array_input, input_params, callback)
 		
-def custom_function(name, param):
+def custom_function(name, param, callback=None):
 	if(mlobject != None):
 		#check for valid method first
 		method_to_call = getattr(mlobject, name)
 		if(method_to_call):
-			call_with_checks(method_to_call, param)
+			return call_with_checks(method_to_call, param, callback)
 		else:
 			return None, "No such function" + str(name)
 		

@@ -54,7 +54,7 @@ async def send_input(sid, data):
 		future.set_result(params)
 
 	#branch targeting for expected functions
-	if data[functionFieldName] == 'onJsonInput':
+	if data[functionFieldName] == 'on_json_input':
 		#define a future so we can return the callback correctly
 
 		inputData = data[inputFieldName]
@@ -65,13 +65,14 @@ async def send_input(sid, data):
 		mlp.json_input(inputData, callback_lambda)
 		return await future
 		
-	elif data[functionFieldName] == 'onFloatArrayInput':
+	elif data[functionFieldName] == 'on_float_array_input':
 		mlp.float_input(data[inputFieldName], callback_lambda)
 		return await future
 
 	#it's a custom function
 	else:
-		return mlp.custom_function(data[functionFieldName], data[inputFieldName])
+		mlp.custom_function(data[functionFieldName], data[inputFieldName], callback_lambda)
+		return await future
 
 @sio.on('startScript', namespace="/")
 async def start_script(sid, script_name):
