@@ -8,7 +8,7 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 2. Pick a folder, navigate to it
 3. ```git clone https://github.com/getnamo/ml-remote-server.git```
 4. Update requirements.txt with any dependencies you need, e.g. tensorflow==2.2
-5. If server is remote run ```pip install -r requirements.txt```. If server is windows embedded double click on InstallRequirements
+5. If server is windows double click on ```InstallRequirements``` or if server is remote run ```pip install -r requirements.txt```. 
 ![](https://i.imgur.com/zUInHbV.png)
 6. If you're not using the autolaunch option on MachineLearnineRemote: If you're on windows double click ```StartupServer.bat``` otherwise in terminal type ```python server.py``` to start the server.
 7. Server is now ready to use. 
