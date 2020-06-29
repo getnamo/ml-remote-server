@@ -16,6 +16,7 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 4. *(Optional)* If you're not using the autolaunch option on MachineLearnineRemote: Double click ```StartupServer.bat``` 
 
 *Option 2) Using Remote Server*
+
 2. Pick a folder, navigate to it
 3. ```git clone https://github.com/getnamo/ml-remote-server.git```
 4. Update requirements.txt with any dependencies you need, e.g. ```tensorflow==2.2```
