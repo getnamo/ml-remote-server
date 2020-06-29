@@ -23,9 +23,10 @@ def copy_environment():
 	env["PATH"] = "/usr/sbin:/sbin:" + env["PATH"]
 	return env
 
-sys.path.append(python_root('/Lib/site-packages'))
-sys.path.append(python_root('/Scripts'))
-sys.path.append(script_root('/tools'))
+def append_path(path):
+	if path not in sys.path:
+		sys.path.append(path)
 
-
-
+append_path(python_root('/Lib/site-packages'))
+append_path(python_root('/Scripts'))
+append_path(script_root('/tools'))
