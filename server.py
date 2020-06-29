@@ -1,13 +1,21 @@
 import sys, os, getopt
 
 #check for embedded startup
-opts, args = getopt.getopt(sys.argv[1:],':e')
+opts, args = getopt.getopt(sys.argv[1:],'p:e')
+
+is_embedded = False
 
 for opt, arg in opts:
+	#print(opts)
+	if(opt in ('-p')):
+		sys.path.append(os.path.abspath(arg))
 	if(opt in ('-e')):
-		print('resolving embedded server dependencies... please wait (~3min)')
-		sys.path.append(os.getcwd())
-		import embedded_server_startup
+		is_embedded = True
+
+if(is_embedded):
+	print('resolving embedded server dependencies... please wait (~3min)')
+	sys.path.append(os.getcwd())
+	import embedded_server_startup
 
 #debug pre-server warmup
 #raise 'Forced crash.'

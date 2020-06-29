@@ -35,15 +35,23 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>
 		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
 		<script>
-			var socket = io();
+			let socket = io();
 			$('form').submit(function(){
 				socket.emit('chatMessage', $('#m').val());
 				$('#m').val('');
 				return false;
 			});
-			socket.on('chatMessage', function(msg){
-				$('#messages').append($('<li>').text(msg));
+
+			function addMessage(msg){
+				$('#messages').append('<li>' + msg + '</li>');
 				window.scrollTo(0,document.body.scrollHeight);
+			}
+
+			socket.on('chatMessage', function(msg){
+				addMessage(msg);
+			});
+			socket.on('disconnect', () => {
+				addMessage('Disconnected from server.');
 			});
 		</script>
 	</body>

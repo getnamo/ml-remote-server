@@ -23,7 +23,7 @@ def backgroundAction(args=None):
 
 	#return the result if we have a callback
 	if callback:
-		if result:
+		if result!=None:
 			ue.run_on_gt(callback, result)
 		else:
 			ue.run_on_gt(callback)
