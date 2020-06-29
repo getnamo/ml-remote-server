@@ -1,0 +1,1 @@
+%~dp0\..\..\Server\python3.7.8\python.exe server.py -e

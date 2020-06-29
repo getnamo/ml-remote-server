@@ -1,6 +1,17 @@
+import sys, os, getopt
+
+#check for embedded startup
+opts, args = getopt.getopt(sys.argv[1:],':e')
+
+for opt, arg in opts:
+	if(opt in ('-e')):
+		print('resolving embedded server dependencies... please wait (~3min)')
+		sys.path.append(os.getcwd())
+		import embedded_server_startup
+
 from aiohttp import web
 import socketio
-import sys
+
 
 #active machine learning script handler
 import mlplugin as mlp
