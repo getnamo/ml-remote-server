@@ -13,9 +13,9 @@ import operator
 class MnistSimple(MLPluginAPI):
 	
 	#expected api: storedModel and session, json inputs
-	def on_json_input(self, jsonInput):
+	def on_json_input(self, json_data):
 		#expect an image struct in json format
-		pixelarray = jsonInput['pixels']
+		pixelarray = json_data['pixels']
 		ue.log('image len: ' + str(len(pixelarray)))
 
 		#embedd the input image pixels as 'x'
@@ -26,12 +26,13 @@ class MnistSimple(MLPluginAPI):
 		#convert our raw result to a prediction
 		index, value = max(enumerate(result[0]), key=operator.itemgetter(1))
 
-		ue.log('max: ' + str(value) + 'at: ' + str(index))
+		ue.log('max: ' + str(value) + ' at: ' + str(index))
 
 		#set the prediction result in our json
-		jsonInput['prediction'] = index
+		json_data = {}
+		json_data['prediction'] = index
 
-		return jsonInput
+		return json_data
 
 	#expected api: no params forwarded for training? TBC
 	def on_begin_training(self):
