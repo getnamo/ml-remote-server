@@ -4,16 +4,19 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 
 ## Quick Setup
 
-1. Install [python 3](https://www.python.org/downloads/) recommended version for e.g. tensorflow: 3.7. Run ```pip install -r requirements.txt```
+1. Install [python 3](https://www.python.org/downloads/) recommended version for e.g. tensorflow: 3.7. 
 2. Pick a folder, navigate to it
 3. ```git clone https://github.com/getnamo/ml-remote-server.git```
-4. If you're on windows double click ```StartupServer.bat``` otherwise in terminal type ```python server.py``` to start the server.
-5. Server is now ready to use. 
+4. Update requirements.txt with any dependencies you need, e.g. tensorflow==2.2
+5. If server is remote run ```pip install -r requirements.txt```. If server is windows embedded double click on InstallRequirements
+![](https://i.imgur.com/zUInHbV.png)
+6. If you're not using the autolaunch option on MachineLearnineRemote: If you're on windows double click ```StartupServer.bat``` otherwise in terminal type ```python server.py``` to start the server.
+7. Server is now ready to use. 
 
 *Optional Steps*
 
-6. Connect your UE4 instance via https://github.com/getnamo/machine-learning-remote-ue4
-7. Listen to log events via your browser by going to ```<server ip>:8080``` or [```localhost:8080```](http://localhost:8080) in your browser. There are some debug commands like ```/r <script name>``` to swap script and ```/i``` to send dummy inputs; see https://github.com/getnamo/ml-remote-server/blob/master/server.py#L117 for all supported commands.
+8. Connect your UE4 instance via https://github.com/getnamo/machine-learning-remote-ue4
+9. Listen to log events via your browser by going to ```<server ip>:8080``` or [```localhost:8080```](http://localhost:8080) in your browser. There are some debug commands like ```/r <script name>``` to swap script and ```/i``` to send dummy inputs; see https://github.com/getnamo/ml-remote-server/blob/master/server.py#L117 for all supported commands.
 
 ## How to use
 
