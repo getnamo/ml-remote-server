@@ -2,27 +2,8 @@ import sys
 import os
 import subprocess
 
-python_folder_name = 'python3.7.8'
-
-def python_root(relative=None):
-	if(relative == None):
-		relative = ''
-	return os.path.abspath(os.getcwd() + '../../' + python_folder_name + '/' +  relative)
-
-def script_root(relative=None):
-	if(relative == None):
-		relative = ''
-	return os.path.abspath(os.getcwd() + '/' + relative)
-
-def print_newline_string(string):
-	lines = string.splitlines()
-	for line in lines:
-		print(line)
-
-def copy_environment():
-	env = os.environ.copy()
-	env["PATH"] = "/usr/sbin:/sbin:" + env["PATH"]
-	return env
+sys.path.append(os.path.abspath(os.getcwd() + '/tools'))
+import embedded_server_utility as util
 
 #list
 def pip_list():
@@ -33,7 +14,7 @@ def pip_list():
 def requirements():
 	result = {}
 	#open requirements file
-	with open(script_root('requirements.txt')) as f:
+	with open(util.script_root('requirements.txt')) as f:
 		lines = f.read().splitlines()
 		for line in lines:
 			nameVer = line.split('==')
@@ -75,19 +56,18 @@ def install_missing_packages():
 
 
 def add_paths():
-	sys.path.append(script_root('/tools'))
-	sys.path.append(python_root('/Lib/site-packages'))
-	sys.path.append(python_root('/Scripts'))
+	sys.path.append(util.python_root('/Lib/site-packages'))
+	sys.path.append(util.python_root('/Scripts'))
 
 
 def startup():
 	add_paths()
 
-	#check for pip
-	fullcommand = python_root('python.exe') +  ' "' + script_root('/tools/embedded_server_dependency_handler.py') + '"'
-	output = subprocess.check_output(fullcommand, shell=True, stderr=subprocess.STDOUT, env=copy_environment()).decode('UTF-8')
+	#check for pip, we need to use a subprocess loop for this due to import complexity
+	fullcommand = util.python_root('python.exe') +  ' "' + util.script_root('/tools/embedded_server_pip_handler.py') + '"'
+	output = subprocess.check_output(fullcommand, shell=True, stderr=subprocess.STDOUT, env=util.copy_environment()).decode('UTF-8')
 
-	print_newline_string(output)
+	util.print_output(output)
 
 	install_missing_packages()	
 

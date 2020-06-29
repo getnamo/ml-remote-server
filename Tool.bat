@@ -1,0 +1,1 @@
+%~dp0\..\..\Server\python3.7\python.exe embedded_server_startup.py

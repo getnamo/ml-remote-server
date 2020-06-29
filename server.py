@@ -9,6 +9,9 @@ for opt, arg in opts:
 		sys.path.append(os.getcwd())
 		import embedded_server_startup
 
+#debug pre-server warmup
+#raise 'Forced crash.'
+
 from aiohttp import web
 import socketio
 
