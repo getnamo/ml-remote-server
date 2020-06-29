@@ -10,7 +10,9 @@ Startup the server, point your ```MachineLearningRemote``` component to your ser
 
 2. Update requirements.txt with any dependencies you need, e.g. tensorflow==2.2
 3. If server is windows double click on ```InstallRequirements```
+
 ![](https://i.imgur.com/zUInHbV.png)
+
 4. *(Optional)* If you're not using the autolaunch option on MachineLearnineRemote: Double click ```StartupServer.bat``` 
 
 *Option 2) Using Remote Server*
