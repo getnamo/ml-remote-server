@@ -2,13 +2,15 @@
 #mnist_softmax.py: https://github.com/tensorflow/tensorflow/blob/r1.1/tensorflow/examples/tutorials/mnist/mnist_softmax.py
 
 # Import data
-from tensorflow.examples.tutorials.mnist import input_data
+#from tensorflow.examples.tutorials.mnist import input_data
 
 import tensorflow as tf
 import unreal_engine as ue
 from mlpluginapi import MLPluginAPI
 
 import operator
+
+print("TensorFlow version:", tf.__version__)
 
 class MnistSimple(MLPluginAPI):
 	
@@ -42,16 +44,19 @@ class MnistSimple(MLPluginAPI):
 		self.scripts_path = ue.get_content_dir() + "Scripts"
 		self.data_dir = self.scripts_path + '/dataset/mnist'
 
-		mnist = input_data.read_data_sets(self.data_dir)
+		mnist = tf.keras.datasets.mnist
+		#mnist = input_data.read_data_sets(self.data_dir)
 
 		# Create the model
-		x = tf.placeholder(tf.float32, [None, 784])
+		x = tf.keras.Input(shape=[None, 784], dtype=tf.dtypes.float32)
+		#x = tf.compat.v1.placeholder(tf.float32, [None, 784])
 		W = tf.Variable(tf.zeros([784, 10]))
 		b = tf.Variable(tf.zeros([10]))
 		y = tf.matmul(x, W) + b
 
 		# Define loss and optimizer
-		y_ = tf.placeholder(tf.int64, [None])
+		y_ = tf.keras.Input(shape=[None], dtype=tf.dtypes.int64)
+		#y_ = tf.placeholder(tf.int64, [None])
 
 		# The raw formulation of cross-entropy,
 		#
@@ -62,8 +67,8 @@ class MnistSimple(MLPluginAPI):
 		#
 		# So here we use tf.losses.sparse_softmax_cross_entropy on the raw
 		# outputs of 'y', and then average across the batch.
-		cross_entropy = tf.losses.sparse_softmax_cross_entropy(labels=y_, logits=y)
-		train_step = tf.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
+		cross_entropy = tf.compat.v1.losses.sparse_softmax_cross_entropy(labels=y_, logits=y)
+		train_step = tf.compat.v1.train.GradientDescentOptimizer(0.5).minimize(cross_entropy)
 
 		#update session for this thread
 		self.sess = tf.InteractiveSession()
