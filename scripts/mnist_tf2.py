@@ -102,8 +102,8 @@ class MnistSimple(MLPluginAPI):
 		self.jsonPixels = jsonPixels
 		self.x_train = x_train
 
-		self.batch_size = 128
-		self.epochs = 5
+		self.batch_size = 32
+		self.epochs = 10
 
 		model = tf.keras.models.Sequential([
 			tf.keras.layers.Flatten(input_shape=(28, 28)),
@@ -126,7 +126,7 @@ class MnistSimple(MLPluginAPI):
 
 		model.fit(x_train, y_train, 
 			epochs=self.epochs, 
-			#batch_size=self.batch_size,
+			batch_size=self.batch_size,
 			callbacks=[self.stopcallback])
 
 		# Test trained model
