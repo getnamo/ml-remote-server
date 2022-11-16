@@ -1,16 +1,18 @@
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import unreal_engine as ue #for remote logging only
 from mlpluginapi import MLPluginAPI
+
+tf.disable_v2_behavior()
 
 class ExampleAPI(MLPluginAPI):
 
 	#expected optional api: setup your model for training
 	def on_setup(self):
-		self.sess = tf.InteractiveSession()
+		self.sess = tf.compat.v1.InteractiveSession()
 		#self.graph = tf.get_default_graph()
 
-		self.a = tf.placeholder(tf.float32)
-		self.b = tf.placeholder(tf.float32)
+		self.a = tf.compat.v1.placeholder(tf.float32)
+		self.b = tf.compat.v1.placeholder(tf.float32)
 
 		#operation
 		self.c = self.a + self.b
