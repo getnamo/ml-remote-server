@@ -14,6 +14,8 @@ from mlpluginapi import MLPluginAPI
 
 import operator
 
+
+
 ue.log("TensorFlow version:" + str(tf.__version__))
 
 class MnistSimple(MLPluginAPI):
@@ -104,6 +106,8 @@ class MnistSimple(MLPluginAPI):
 
 		self.batch_size = 32
 		self.epochs = 10
+
+		tf.config.run_functions_eagerly(True)
 
 		model = tf.keras.models.Sequential([
 			tf.keras.layers.Flatten(input_shape=(28, 28)),
