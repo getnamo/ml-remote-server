@@ -6,9 +6,14 @@ import asyncio
 #asyncio.set_event_loop(loop)
 
 def run_on_sio(future):
+	try:
+		g.sio_loop = asyncio.get_running_loop()
+	except:
+		pass
 	asyncio.run_coroutine_threadsafe(future, g.sio_loop)
 
 def sio_future():
+	g.sio_loop = asyncio.get_running_loop()
 	return g.sio_loop.create_future()
 
 #todo: fix events and emitting while in sync mode
@@ -35,7 +40,7 @@ def set_sio_link(link_sio, link_app):
 	g.sio_loop = asyncio.get_event_loop()
 
 # wrap around callbacks
-def run_on_gt(callback, param):
+def run_on_gt(callback, param=None):
 	#called directly
 	print("run_on_gt callback: " + str(param))
 	if(callback != None):

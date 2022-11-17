@@ -1,6 +1,7 @@
 import tensorflow.compat.v1 as tf
 import unreal_engine as ue #for remote logging only
 from mlpluginapi import MLPluginAPI
+import asyncio
 
 tf.disable_v2_behavior()
 
