@@ -4,6 +4,8 @@ import tensorflow as tf
 import operator
 import numpy as np
 
+
+#callback wrapper so we can get the stop callback
 class EarlyStopCallback(tf.keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
     	pass
@@ -64,7 +66,7 @@ class ExampleAPI(MLPluginAPI):
 
 		pixelarray = input['pixels']
 
-		ue.log('image len: ' + str(len(pixelarray)))
+		ue.log('image pixel count: ' + str(len(pixelarray)))
 
 		# ensure our array is properly sized before reshaping
 		if len(pixelarray) != 784:
@@ -72,14 +74,15 @@ class ExampleAPI(MLPluginAPI):
 
 		reshaped = np.array(pixelarray).reshape(1, 28, 28)
 
-		ue.log(f'shape json is {reshaped.shape}')
-		ue.log(f'shape test is {self.x_test[:1].shape}')
+		#ue.log(f'shape json is {reshaped.shape}')
+		#ue.log(f'shape test is {self.x_test[:1].shape}')
 
 		#run the mnist inference through the probability model
 		result = probability_model(reshaped)
+		#result = probability_model(self.x_test[:1]) #optionally: run inference on test data
 
 		#convert our raw result probability to a single max prediction
-		index, value = max(enumerate(result), key=operator.itemgetter(1))
+		index, value = max(enumerate(result[0]), key=operator.itemgetter(1))
 
 		ue.log('max: ' + str(value) + 'at: ' + str(index))
 
@@ -105,7 +108,7 @@ class ExampleAPI(MLPluginAPI):
 		self.is_training = True
 
 		#~5 epochs is sufficient to train mnist to 98%
-		model.fit(x_train, y_train, epochs=1, callbacks=[early_stop]) #, callbacks=[early_stop])
+		model.fit(x_train, y_train, epochs=5, callbacks=[early_stop]) #, callbacks=[early_stop])
 		model.evaluate(x_test,  y_test, verbose=2)
 
 		
