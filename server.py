@@ -22,6 +22,8 @@ if(is_embedded):
 
 from aiohttp import web
 import socketio
+#import asyncio
+import shared_globals as g
 
 
 #active machine learning script handler
@@ -42,10 +44,9 @@ async def index(request):
 app = web.Application()
 app.add_routes([web.get('/', index)])
 sio.attach(app)
-
-#linkup references for script callbacks via ue.log and ue.custom_event
 ue.set_sio_link(sio, app)
 
+#linkup references for script callbacks via ue.log and ue.custom_event
 inputFieldName = 'inputData'
 functionFieldName = 'targetFunction'
 
@@ -53,6 +54,10 @@ functionFieldName = 'targetFunction'
 @sio.on('connect', namespace="/")
 async def connect(sid, data):
 	print( "connect ", sid)
+
+	ue.set_loop_link()
+
+
 	await sio.emit('chatMessage', str(sid)[0:4] + ' connected.')
 
 @sio.on('disconnect', namespace="/")
@@ -69,13 +74,14 @@ async def send_input(sid, data):
 	global functionFieldName
 
 	#handle callback and wrap around logs
-	future = ue.sio_future() #asyncio.get_event_loop().create_future()
+	future = ue.sio_future() 
 
 	def callback_lambda(params):
 		#print and emit logs
-		print(f"callback_lambda params are: {params}")
-
-		future.set_result(params)
+		#print(f"callback_lambda params are: {params}")
+		
+		#this will be called from a different thread, so wrap it around a threadsafe call
+		future.get_loop().call_soon_threadsafe(lambda: future.set_result(params))
 
 
 	#branch targeting for expected functions
