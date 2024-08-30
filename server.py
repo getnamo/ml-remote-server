@@ -55,6 +55,7 @@ functionFieldName = 'targetFunction'
 async def connect(sid, data):
 	print( "connect ", sid)
 
+	# We need our event loop to be set from the function that properly gets call backs
 	ue.set_loop_link()
 
 

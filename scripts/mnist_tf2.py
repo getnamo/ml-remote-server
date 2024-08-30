@@ -72,14 +72,14 @@ class ExampleAPI(MLPluginAPI):
 
 		reshaped = np.array(pixelarray).reshape(1, 28, 28)
 
-		print('shape json is', reshaped.shape)
-		print('shape test is', self.x_test[:1].shape)
+		ue.log(f'shape json is {reshaped.shape}')
+		ue.log(f'shape test is {self.x_test[:1].shape}')
 
 		#run the mnist inference through the probability model
 		result = probability_model(reshaped)
 
 		#convert our raw result probability to a single max prediction
-		index, value = max(enumerate(result[0]), key=operator.itemgetter(1))
+		index, value = max(enumerate(result), key=operator.itemgetter(1))
 
 		ue.log('max: ' + str(value) + 'at: ' + str(index))
 
@@ -87,11 +87,11 @@ class ExampleAPI(MLPluginAPI):
 
 	#optional api: start training your network
 	def on_begin_training(self):
-		ue.log('hello on_begin_training')
+		ue.log('on_begin_training')
 
 		#early exit, only train one at a time
 		if self.is_training == True:
-			print('early exit')
+			ue.log('early exit')
 			return {}
 
 		#local var anything we use to train
@@ -110,6 +110,7 @@ class ExampleAPI(MLPluginAPI):
 
 		
 
+		ue.log('training complete')
 		pass
 		#return {}
 
