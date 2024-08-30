@@ -28,6 +28,7 @@ import socketio
 import mlplugin as mlp
 import unreal_engine as ue
 import json
+#import asyncio
 
 # create a Socket.IO server
 sio = socketio.AsyncServer() #async_handlers=True
@@ -68,12 +69,14 @@ async def send_input(sid, data):
 	global functionFieldName
 
 	#handle callback and wrap around logs
-	future = ue.sio_future()
+	future = ue.sio_future() #asyncio.get_event_loop().create_future()
+
 	def callback_lambda(params):
 		#print and emit logs
-		print('sendInput return: ' + str(params))
-		ue.log(params)
+		print(f"callback_lambda params are: {params}")
+
 		future.set_result(params)
+
 
 	#branch targeting for expected functions
 	if data[functionFieldName] == 'on_json_input':
@@ -81,10 +84,11 @@ async def send_input(sid, data):
 
 		inputData = data[inputFieldName]
 		#json decode string if string passed (possible call not using sio object call)
-		if type(inputData) is str:
+		if isinstance(inputData, str):
 			inputData = json.loads(inputData)
 
 		mlp.json_input(inputData, callback_lambda)
+
 		return await future
 		
 	elif data[functionFieldName] == 'on_float_array_input':
@@ -110,7 +114,7 @@ async def start_script(sid, script_name):
 	print('started.')
 
 	await sio.emit('scriptStarted', script_name) #todo: capture script errors
-	await sio.emit('chatMessage', 'started script' + script_name)
+	await sio.emit('chatMessage', 'started script `' + script_name + '`')
 
 @sio.on('stopScript', namespace="/")
 async def stop_script(sid, script_name):
@@ -151,7 +155,7 @@ async def chat(sid, data):
 		await start_script(sid, script_name)
 
 	if data[0:2] == '/i':
-		result = await send_input(sid, {functionFieldName:'onJsonInput',inputFieldName:{'a':1,'b':2}})
+		result = await send_input(sid, {functionFieldName:'on_json_input',inputFieldName:{'a':1,'b':2}})
 		print(result)
 
 	if data[0:2] == '/f':
