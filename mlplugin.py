@@ -87,7 +87,7 @@ def call_with_checks(function, input_params=None, callback=None):
 					return function(input_params, callback)
 	except BaseException as e:
 			error_stack = traceback.format_exc()
-			ue.log(error_s)
+			ue.log(error_stack)
 
 #def input_callback(input):
 	
